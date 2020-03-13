@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1.cardGame"}],"uuid":"4894ddafa1f1496496ca7490cbe4cebe"}

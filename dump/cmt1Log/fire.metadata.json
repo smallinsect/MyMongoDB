@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1Log.fire"}],"uuid":"66e3b9bf0bfc46a7ad4950a33d412834"}

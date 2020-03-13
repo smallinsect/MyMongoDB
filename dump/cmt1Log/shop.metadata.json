@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1Log.shop"}],"uuid":"065ddf9bf8e64f0fab70c3b453cd343f"}

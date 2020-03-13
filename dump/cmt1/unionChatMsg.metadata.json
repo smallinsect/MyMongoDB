@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1.unionChatMsg"}],"uuid":"6732e333c42d41f39d7de853793bb1d9"}

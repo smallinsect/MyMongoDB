@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1.adRewards"}],"uuid":"4b8ea5d5c19e46b5acec27c6580f7e90"}

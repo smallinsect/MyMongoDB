@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1.eventMsg"}],"uuid":"1238f6508ada4286aeb5b26cdc1b9e9e"}

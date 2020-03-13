@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1-test.lockBlocks"}],"uuid":"3d1dcc835d214924bb8714f4af65f4c6"}

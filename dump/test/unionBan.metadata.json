@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"test.unionBan"}],"uuid":"5d9724bd8b9e40e39cf32b3cfcca9d96"}
