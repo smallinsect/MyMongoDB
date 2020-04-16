@@ -8,14 +8,23 @@
 1. 全局备份和增量备份
     * https://www.cnblogs.com/hukey/p/11512062.html
 1. Windows上搭建MongoDB副本集
+    - https://docs.mongodb.com/manual/tutorial/deploy-replica-set-for-testing/
     - https://www.cnblogs.com/s6-b/p/11128002.html
     - https://www.cnblogs.com/dadaokongkong/p/11919378.html
     - https://blog.csdn.net/wanght89/article/details/77677271
     - https://my.oschina.net/danjuan/blog/2999679
+    - https://www.cnblogs.com/dennisit/archive/2013/01/28/2880166.html
 1. Linux上搭建MongoDB副本集
     - https://blog.csdn.net/liu123641191/article/details/80963074
+    - https://blog.csdn.net/weixin_34029680/article/details/93074653
+    - https://segmentfault.com/a/1190000019753486
+    - https://blog.csdn.net/caiqiandu/article/details/90051107
 1. 问题
     - https://blog.csdn.net/weixin_43112000/article/details/83859413
+    - https://www.jianshu.com/p/b5a7d13e1391
+1. 节点切换
+    - https://blog.csdn.net/weixin_34290631/article/details/90096649
+    - https://blog.csdn.net/biao0309/article/details/95111946
 
 # 常用命令
 1. 连接数据库 mongo
@@ -319,8 +328,6 @@ db.isMaster()
 6. 验证副本集数据的一致性
 
 1. windows的数据库集群
-- https://www.cnblogs.com/s6-b/p/11128002.html
-- https://www.cnblogs.com/dadaokongkong/p/11919378.html
 ``` 
 mongod --replSet rs0 --port 27021 --dbpath E:\mongo\mongo1\data
 mongod --config "E:\mongo\mongo1\mongod.cfg" --serviceName "MongoDB1" --serviceDisplayName "MongoDB1" --install
@@ -372,17 +379,57 @@ rs.status()
 设置副节点可读数据权限
 ```
 db.getMongo().setSlaveOk()
+rs.slaveOk()
 ```
+- 移除一台服务器
 ```
-移除一台服务器
 你要连接到第二个成员的mongo实例 通过mongo+端口号
 执行以下命令 db.shutdownServer()
 ```
 ```
 接着你要连接到主节点mongoshell
-执行以下命令来移除该成员 rs.remove("127.0.0.1:27018")
+执行以下命令来移除该成员 rs.remove("127.0.0.1:27022")
 ```
 添加一台服务器
 ```
 连接到主节点(27017)的mongoshell控制台，将这个新成员添加到副本集 rs.add("127.0.0.1:27020")
+```
+- 将第两个个从节点设置为仲裁节点，也就是将127.0.0.1:27112，127.0.0.1:27113设置为仲裁节点，首先删除原始的第二个从节点：
+```
+rs.remove("127.0.0.1:27021")
+rs.remove("127.0.0.1:27022")
+rs.remove("127.0.0.1:27023")
+
+rs.add("127.0.0.1:27021")
+rs.add("127.0.0.1:27022")
+rs.add("127.0.0.1:27023")
+添加仲裁点
+rs.addArb("127.0.0.1:27023")
+```
+- 重新设置副本集，参数
+```
+config_set={
+    "_id":"rs0",
+    members:[
+            {_id:0,host:"127.0.0.1:27021"},
+            {_id:1,host:"127.0.0.1:27022"},
+            {_id:2,host:"127.0.0.1:27023",arbiterOnly:true}
+    ]
+}
+```
+- 然后执行
+```
+rs.reconfig(config_set)
+
+```
+- 再查看状态
+```
+rs.status()
+```
+- 看出从节点2的stateStr为ARBITER。至此，一主一丛一仲裁节点的副本集才创建完毕。
+```
+arps:PRIMARY> config=rs.conf()                //查看当前配置，存入config变量中。
+arps:PRIMARY> config.members[2].priority = 3  //修改config变量，第三组成员的优先级为3.
+arps:PRIMARY> rs.reconfig(config)             //配置生效 
+arps:SECONDARY> rs.conf()  
 ```
