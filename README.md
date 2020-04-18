@@ -7,6 +7,8 @@
     * https://www.w3cschool.cn/mongodb/
 1. 全局备份和增量备份
     * https://www.cnblogs.com/hukey/p/11512062.html
+    - https://www.cnblogs.com/xuliuzai/p/9832333.html
+    - https://www.cnblogs.com/xuliuzai/p/9917137.html
 1. Windows上搭建MongoDB副本集
     - https://docs.mongodb.com/manual/tutorial/deploy-replica-set-for-testing/
     - https://www.cnblogs.com/s6-b/p/11128002.html
@@ -19,6 +21,7 @@
     - https://blog.csdn.net/weixin_34029680/article/details/93074653
     - https://segmentfault.com/a/1190000019753486
     - https://blog.csdn.net/caiqiandu/article/details/90051107
+    - https://www.osyunwei.com/archives/9313.html
 1. 问题
     - https://blog.csdn.net/weixin_43112000/article/details/83859413
     - https://www.jianshu.com/p/b5a7d13e1391
@@ -51,6 +54,19 @@
 1. 索引 createIndex()
 1. 聚合 aggregate() 管道
 1. 删除数据库 db.dropDatabase()
+```
+show dbs
+use cmt1
+db.dropDatabase()
+use cmt1-test
+db.dropDatabase()
+use cmt1Log
+db.dropDatabase()
+use test
+db.dropDatabase()
+use testLog
+db.dropDatabase()
+```
 1. 查看集合 show tables
     * 
 1. 创建集合 db.createCollection("runoobtt")
@@ -123,7 +139,7 @@ E:\data>mongorestore -h <hostname><:port> -d dbname <path>
 你不能同时指定 <path> 和 --dir 选项，--dir也可以设置备份目录。
 --dir：指定备份的目录，你不能同时指定 <path> 和 --dir 选项。
 ```
-`实例`
+实例
 ```
 备份远程服务器的MongoDB数据库test到本地E:\data\dump目录下
 > mongodump -h 192.168.3.64:27017 -d test -o E:\data\dump
@@ -432,4 +448,100 @@ arps:PRIMARY> config=rs.conf()                //查看当前配置，存入confi
 arps:PRIMARY> config.members[2].priority = 3  //修改config变量，第三组成员的优先级为3.
 arps:PRIMARY> rs.reconfig(config)             //配置生效 
 arps:SECONDARY> rs.conf()  
+```
+
+# Linux下搭建副本集群
+## 查看服务器命令
+- 查看linux版本
+```
+cat /proc/version
+```
+- 创建文件夹
+```
+执行目录
+mkdir -p /data/mongodb/mdb1/bin
+mkdir -p /data/mongodb/mdb2/bin
+mkdir -p /data/mongodb/mdb3/bin
+mkdir -p /data/mongodb/mdb4/bin
+数据目录
+mkdir -p /data/mongodb/mdb1/data
+mkdir -p /data/mongodb/mdb2/data
+mkdir -p /data/mongodb/mdb3/data
+mkdir -p /data/mongodb/mdb4/data
+日志目录
+mkdir -p /data/mongodb/mdb1/log
+mkdir -p /data/mongodb/mdb2/log
+mkdir -p /data/mongodb/mdb3/log
+mkdir -p /data/mongodb/mdb4/log
+复制执行文件
+cp -fp /usr/bin/mongod /data/mongodb/mdb1/bin
+cp -fp /usr/bin/mongod /data/mongodb/mdb2/bin
+cp -fp /usr/bin/mongod /data/mongodb/mdb3/bin
+cp -fp /usr/bin/mongod /data/mongodb/mdb4/bin
+复制进程id文件
+cp -fp /var/run/mongodb/mongod.pid /data/mongodb/mdb1/
+cp -fp /var/run/mongodb/mongod.pid /data/mongodb/mdb2/
+cp -fp /var/run/mongodb/mongod.pid /data/mongodb/mdb3/
+cp -fp /var/run/mongodb/mongod.pid /data/mongodb/mdb4/
+复制配置文件
+cp -fp /etc/mongod.conf /data/mongodb/mdb1/
+cp -fp /data/mongodb/mdb1/mongod.conf /data/mongodb/mdb2/
+cp -fp /data/mongodb/mdb1/mongod.conf /data/mongodb/mdb3/
+cp -fp /data/mongodb/mdb1/mongod.conf /data/mongodb/mdb4/
+执行程序
+/data/mongodb/mdb1/bin/mongod -f /data/mongodb/mdb1/mongod.conf
+/data/mongodb/mdb2/bin/mongod -f /data/mongodb/mdb2/mongod.conf
+/data/mongodb/mdb3/bin/mongod -f /data/mongodb/mdb3/mongod.conf
+/data/mongodb/mdb4/bin/mongod -f /data/mongodb/mdb4/mongod.conf
+
+杀掉进程
+kill pid
+rm -rf /data/mongodb/mdb1/bin/mongod
+```
+## 配置文件
+```
+mdb1 端口27017 主
+mdb2 端口27018 仲裁
+mdb3 端口27019 次
+mdb4 端口27020 次
+```
+
+## 初始化
+```
+rscongfig={"_id":"rs0",
+    members:[
+        {_id:0,host:"localhost:27018"},
+        {_id:1,host:"localhost:27019"},
+        {_id:2,host:"localhost:27020"}
+    ]
+}
+```
+```
+rs.initiate(rscongfig)
+```
+## 设置仲裁点
+```
+rs.add("localhost:27017")
+rs.addArb("127.0.0.1:27023")
+```
+## 查看配置
+```
+rs.conf()
+```
+## 查看辅助节点数据
+```
+辅助节点初次同步数据会提示错误如下  解决方法如下 
+rs.slaveOk()   或者    db.getMongo().setSlaveOk()
+```
+## 切换主副节点
+```
+arps:PRIMARY> config=rs.conf()                //查看当前配置，存入config变量中。
+arps:PRIMARY> config.members[2].priority = 3  //修改config变量，第三组成员的优先级为3.
+arps:PRIMARY> rs.reconfig(config)             //配置生效 
+arps:SECONDARY> rs.conf()                    //查看当前配置
+```
+
+## 连接数据库
+```
+mongo --host 192.168.5.99 --port 27017
 ```
