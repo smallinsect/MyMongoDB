@@ -2,8 +2,10 @@
 
 # 教程链接
 1. MongoDB 教程 | 菜鸟教程
+   
     * https://www.runoob.com/mongodb/mongodb-tutorial.html
 2. MongoDB 教程_w3cschool
+   
     * https://www.w3cschool.cn/mongodb/
 1. 全局备份和增量备份
     * https://www.cnblogs.com/hukey/p/11512062.html
@@ -280,7 +282,40 @@ security:
     keyFile: ../../mongodb.key
     javascriptEnabled: true
 ```
-2. 生成keyFile文件
+```
+systemLog:
+  destination: file
+  logAppend: true
+  path: /data/mongodb/logs/mongod.log
+
+storage:
+  dbPath: /data/mongodb/data
+  journal:
+    enabled: true
+  directoryPerDB: true
+  wiredTiger:
+     engineConfig:
+        cacheSizeGB: 8                    #如果一台机器启动一个实例这个可以注释选择默认，如果一台机器启动多个实例，需要设置内存大小，避免互相抢占内存
+        directoryForIndexes: true
+
+processManagement:
+  fork: true
+  pidFilePath: /data/mongodb/pid/mongod.pid
+
+net:
+  port: 27020
+  bindIp: 10.1.1.159,localhost      #修改为本机IP地址
+  maxIncomingConnections: 5000
+
+#security:
+  #keyFile: /data/mongodb/conf/keyfile
+  #authorization: enabled
+replication:
+#   oplogSizeMB: 1024
+   replSetName: rs02
+```
+
+1. 生成keyFile文件
 ```
 openssl rand -base64 735 > mongodb.key
 chmod 600 mongodb.key
@@ -510,9 +545,10 @@ mdb4 端口27020 次
 ```
 rscongfig={"_id":"rs0",
     members:[
-        {_id:0,host:"localhost:27018"},
-        {_id:1,host:"localhost:27019"},
-        {_id:2,host:"localhost:27020"}
+        {_id:0,host:"localhost:27017"},
+        {_id:1,host:"localhost:27018",arbiterOnly:true},
+        {_id:2,host:"localhost:27019"},
+        {_id:3,host:"localhost:27020"}
     ]
 }
 ```
@@ -531,7 +567,7 @@ rs.conf()
 ## 查看辅助节点数据
 ```
 辅助节点初次同步数据会提示错误如下  解决方法如下 
-rs.slaveOk()   或者    db.getMongo().setSlaveOk()
+rs.slaveOk() 或者 db.getMongo().setSlaveOk()
 ```
 ## 切换主副节点
 ```
@@ -545,3 +581,44 @@ arps:SECONDARY> rs.conf()                    //查看当前配置
 ```
 mongo --host 192.168.5.99 --port 27017
 ```
+
+## 清除数据库所有数据
+
+```
+rm -rf /data/mongodb/mdb1/data/*
+rm -rf /data/mongodb/mdb2/data/*
+rm -rf /data/mongodb/mdb3/data/*
+rm -rf /data/mongodb/mdb4/data/*
+```
+
+## 开启数据库服务
+
+```
+/data/mongodb/mdb1/bin/mongod -f /data/mongodb/mdb1/mongod.conf 
+/data/mongodb/mdb2/bin/mongod -f /data/mongodb/mdb2/mongod.conf
+/data/mongodb/mdb3/bin/mongod -f /data/mongodb/mdb3/mongod.conf
+/data/mongodb/mdb4/bin/mongod -f /data/mongodb/mdb4/mongod.conf
+```
+
+## 数据库备份
+
+```
+mongodump -h 192.168.5.99:27017 -d test -o E:\data\dump
+mongodump -h 192.168.5.99:27017 -d testLog -o E:\data\dump
+mongodump -h 192.168.5.99:27017 -d cmt1-test -o E:\data\dump
+mongodump -h 192.168.5.99:27017 -d cmt1-testLog -o E:\data\dump
+mongodump -h 192.168.5.99:27017 -d cmt1 -o E:\data\dump
+mongodump -h 192.168.5.99:27017 -d cmt1Log -o E:\data\dump
+```
+
+## 恢复数据库
+
+```
+mongorestore -h 192.168.5.99:27017 -d test E:\data\dump\test
+mongorestore -h 192.168.5.99:27017 -d testLog E:\data\dump\testLog
+mongorestore -h 192.168.5.99:27017 -d cmt1-test E:\data\dump\cmt1-test
+mongorestore -h 192.168.5.99:27017 -d cmt1-testLog E:\data\dump\cmt1-testLog
+mongorestore -h 192.168.5.99:27017 -d cmt1 E:\data\dump\cmt1
+mongorestore -h 192.168.5.99:27017 -d cmt1Log E:\data\dump\cmt1Log
+```
+
