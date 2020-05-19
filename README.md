@@ -1,4 +1,4 @@
-# MyMongoDB
+# **db.shutdownServer()**MyMongoDB
 
 # 教程链接
 1. MongoDB 教程 | 菜鸟教程
@@ -238,6 +238,8 @@ net stop MongoDB
 net stop MongoDB1
 net stop MongoDB2
 net stop MongoDB3
+
+db.shutdownServer()
 ```
 5. 移除服务
 ```
