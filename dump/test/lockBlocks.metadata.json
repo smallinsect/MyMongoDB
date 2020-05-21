@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"test.lockBlocks"}],"uuid":"f07282eff8cc46498ac56cc4b3c4a7e7"}

@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1.userActivityProgress"}],"uuid":"e0eaf7f17c0342e09a628d8d92cfcb9b"}

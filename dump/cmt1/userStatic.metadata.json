@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1.userStatic"}],"uuid":"64f1385e0df04a2f9c24696c6036bebd"}

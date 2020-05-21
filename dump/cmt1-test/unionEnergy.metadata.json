@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1-test.unionEnergy"}],"uuid":"52010fd12d33456e85ee6538be2df160"}

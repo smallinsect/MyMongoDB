@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"test.actActivityGroup"}],"uuid":"17ec6194b0064e49b35c3abe1382a453"}

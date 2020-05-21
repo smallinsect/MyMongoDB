@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1-test.scryerInfoData"}],"uuid":"d8f19c9cbe344ae68a3b45830cc1d428"}

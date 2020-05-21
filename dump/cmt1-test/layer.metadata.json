@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cmt1-test.layer"}],"uuid":"19ce0fe188a042d38f54c3893c09adb7"}
