@@ -4,13 +4,16 @@
 1. MongoDB 教程 | 菜鸟教程
    
     * https://www.runoob.com/mongodb/mongodb-tutorial.html
+    
 2. MongoDB 教程_w3cschool
    
     * https://www.w3cschool.cn/mongodb/
+    
 1. 全局备份和增量备份
     * https://www.cnblogs.com/hukey/p/11512062.html
     - https://www.cnblogs.com/xuliuzai/p/9832333.html
     - https://www.cnblogs.com/xuliuzai/p/9917137.html
+    
 1. Windows上搭建MongoDB副本集
     - https://docs.mongodb.com/manual/tutorial/deploy-replica-set-for-testing/
     - https://www.cnblogs.com/s6-b/p/11128002.html
@@ -18,18 +21,124 @@
     - https://blog.csdn.net/wanght89/article/details/77677271
     - https://my.oschina.net/danjuan/blog/2999679
     - https://www.cnblogs.com/dennisit/archive/2013/01/28/2880166.html
+    
 1. Linux上搭建MongoDB副本集
     - https://blog.csdn.net/liu123641191/article/details/80963074
     - https://blog.csdn.net/weixin_34029680/article/details/93074653
     - https://segmentfault.com/a/1190000019753486
     - https://blog.csdn.net/caiqiandu/article/details/90051107
     - https://www.osyunwei.com/archives/9313.html
+    
 1. 问题
     - https://blog.csdn.net/weixin_43112000/article/details/83859413
     - https://www.jianshu.com/p/b5a7d13e1391
-1. 节点切换
+    
+7. 节点切换
     - https://blog.csdn.net/weixin_34290631/article/details/90096649
     - https://blog.csdn.net/biao0309/article/details/95111946
+
+8. 下载地址
+
+    - https://www.mongodb.com/download-center/community
+
+
+
+# Linux RedHat安装MongoDB
+
+下载地址
+
+```
+https://www.mongodb.com/download-center/community
+```
+
+下载
+
+```
+curl -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel80-4.2.7.tgz   # 下载
+tar -zxvf mongodb-linux-x86_64-rhel80-4.2.7.tgz                                  # 解压
+mv mongodb-linux-x86_64-rhel80-4.2.7/ /usr/local/mongodb           # 将解压包拷贝到指定目录
+```
+
+执行命令
+
+```
+/usr/local/mongodb/bin/mongod
+/usr/local/mongodb/bin/mongo
+```
+
+添加环境变量
+
+```
+export PATH=<mongodb-install-directory>/bin:$PATH
+<mongodb-install-directory> 为你 MongoDB 的安装路径。如本文的 /usr/local/mongodb 。
+```
+
+
+
+配置端口
+
+```
+27016 仲裁
+27017 主
+27018 次
+27019 次
+
+```
+
+复制执行文件
+
+```
+cp -rf /usr/local/mongodb/bin/mongod /data/mongodb/mdb1/bin/mongod
+cp -rf /usr/local/mongodb/bin/mongod /data/mongodb/mdb2/bin/mongod
+cp -rf /usr/local/mongodb/bin/mongod /data/mongodb/mdb3/bin/mongod
+cp -rf /usr/local/mongodb/bin/mongod /data/mongodb/mdb4/bin/mongod
+```
+
+启动服务器
+
+```
+/data/mongodb/mdb1/bin/mongod -f /data/mongodb/mdb1/mongod.conf
+/data/mongodb/mdb2/bin/mongod -f /data/mongodb/mdb2/mongod.conf
+/data/mongodb/mdb3/bin/mongod -f /data/mongodb/mdb3/mongod.conf
+/data/mongodb/mdb4/bin/mongod -f /data/mongodb/mdb4/mongod.conf
+```
+
+连接数据库
+
+```
+/usr/local/mongodb/bin/mongo --port 27017
+```
+
+集群初始化
+
+```
+rscongfig={"_id":"rs0",
+    members:[
+        {_id:0,host:"localhost:27016",arbiterOnly:true},
+        {_id:1,host:"localhost:27017"},
+        {_id:2,host:"localhost:27018"},
+        {_id:3,host:"localhost:27019"}
+    ]
+}
+```
+
+```
+rs.initiate(rscongfig)
+```
+
+查看状态
+
+```
+rs.status()
+```
+
+查看配置
+
+```
+rs.conf()
+```
+
+
 
 # 常用命令
 1. 连接数据库 mongo
