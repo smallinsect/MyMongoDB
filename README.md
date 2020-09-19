@@ -41,7 +41,17 @@
 
     - https://www.mongodb.com/download-center/community
 
+9. 中文官网文档
 
+    - https://www.mongodb.org.cn/tutorial/
+    
+10. 官方文档
+
+    - https://docs.mongodb.com/manual/reference/operator/query/elemMatch/
+
+C++连接MongoDB文档
+
+http://mongocxx.org/mongocxx-v3/tutorial/#access-a-database
 
 # Linux RedHat安装MongoDB
 
@@ -78,7 +88,7 @@ export PATH=<mongodb-install-directory>/bin:$PATH
 ```
 27016 仲裁
 27017 主
-27018 次
+27018 次--
 27019 次
 ```
 
